@@ -1,25 +1,26 @@
 pipeline {
     agent any
     environment {
-        IMAGE_TAG = "akhilkk03/node-app:${BUILD_NUMBER}"
+        IMAGE_TAG = "akhilkk03/node-app:${BUILD_NUMBER}"  // 🔹 Naming convention
     }
     stages {
         stage('Clone repo') {
             steps {
                 checkout scm
-                bat 'git fetch --all'  // 🔹 Fetch all branches
-                bat 'git branch'       // 🔹 Debugging: Show available branches
-                bat 'git checkout master || git checkout -b master'  // 🔹 Switch to master
+                bat 'git fetch --all'
+                bat 'git checkout master'
+                bat 'git reset --hard origin/master'
+                bat 'git pull origin master --rebase'
             }
         }
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t %IMAGE_TAG% .'
+                bat 'docker build -t %IMAGE_TAG% .'  // 🔹 Use BUILD_NUMBER
             }
         }
         stage('Push Docker Image') {
             steps {
-                withDockerRegistry([credentialsId: 'docker-hub-credentials', url: 'https://index.docker.io/v1/']) {
+                withDockerRegistry([credentialsId: 'docker-hub-credentials', url: 'https://index.docker.io/v1/']) {  // 🔹 Correct credential ID
                     bat 'docker push %IMAGE_TAG%'
                 }
             }
