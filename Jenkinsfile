@@ -37,5 +37,13 @@ pipeline {
                 }
             }
         }
+         stage('Trigger ArgoCD Sync') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'argocd-creds', usernameVariable: 'ARGOCD_USER', passwordVariable: 'ARGOCD_PASS')]) {
+                    bat 'argocd login <ARGOCD_SERVER> --username %ARGOCD_USER% --password %ARGOCD_PASS% --insecure'
+                    bat 'argocd app sync node-app'
+                }
+            }
+        }
     }
 }
