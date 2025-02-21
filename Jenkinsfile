@@ -24,7 +24,7 @@ pipeline {
         stage('Update K8s Deployment in GitHub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
-                    bat 'powershell -Command "(Get-Content k8s/deployment.yaml) -replace ''image: .*'', ''image: %IMAGE_TAG%'' | Set-Content k8s/deployment.yaml"'
+bat 'powershell -Command "(Get-Content k8s/deployment.yaml) -replace ''image: .*'', ''image: %IMAGE_TAG%'' | Set-Content k8s/deployment.yaml"'
                     bat 'git config --global user.email "jenkins@ci.com"'
                     bat 'git config --global user.name "Jenkins CI"'
                     bat 'git status'  // Ensure file is modified
