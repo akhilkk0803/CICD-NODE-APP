@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        IMAGE_TAG = "akhilkk03/node-app:${BUILD_NUMBER}"
+        IMAGE_TAG = "akhilkk03/node-app:%BUILD_NUMBER%"
     }
     stages {
         stage('Clone repo') {
@@ -29,7 +29,7 @@ pipeline {
                     bat 'git config --global user.name "Jenkins CI"'
                     bat "git add k8s/deployment.yaml"
                     bat "git commit -m 'Update deployment image to %IMAGE_TAG%'"
-                    bat "git push https://$GIT_USER:$GIT_PASS@github.com/akhilkk0803/node-app.git main"
+    bat "git push https://%GIT_USER%:%GIT_PASS%@github.com/akhilkk0803/node-app.git main"
                 }
             }
         }
