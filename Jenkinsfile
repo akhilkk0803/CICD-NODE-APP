@@ -16,7 +16,7 @@ pipeline {
         }
         stage('Push Docker Image') {
             steps {
-                withDockerRegistry([credentialsId: 'dockerhub-creds', url: 'https://index.docker.io/v1/']) {
+                withDockerRegistry([credentialsId: 'dockerhub-hub-credentials', url: 'https://index.docker.io/v1/']) {
                     bat 'docker push %IMAGE_TAG%'
                 }
             }
@@ -24,7 +24,7 @@ pipeline {
         stage('Update K8s Deployment in GitHub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
-bat "powershell -Command \"(Get-Content k8s/deployment.yaml) -replace 'image: .*', 'image: akhilkk03/node-app:%BUILD_NUMBER%' | Set-Content k8s/deployment.yaml\""
+                    bat 'powershell -Command "(Get-Content k8s/deployment.yaml) -replace ''image: .*'', ''image: %IMAGE_TAG%'' | Set-Content k8s/deployment.yaml"'
                     bat 'git config --global user.email "jenkins@ci.com"'
                     bat 'git config --global user.name "Jenkins CI"'
                     bat 'git status'  // Ensure file is modified
