@@ -31,7 +31,7 @@ bat "powershell -Command \"(Get-Content k8s/deployment.yaml) -replace 'image: .*
                     bat 'git add k8s/deployment.yaml'
                     bat 'git status'  // Check if file is staged
                     bat 'git commit -m "Update deployment image to %IMAGE_TAG%" || echo "No changes to commit"'
-                    bat 'git push https://%GIT_USER%:%GIT_PASS%@github.com/akhilkk0803/node-app.git main'
+                    bat 'git push https://%GIT_USER%:%GIT_PASS%@github.com/akhilkk0803/CICD-NODE-APP.git main'
                 }
             }
         }
