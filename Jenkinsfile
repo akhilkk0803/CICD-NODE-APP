@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        IMAGE_TAG = "akhilkk03/node-app:%BUILD_NUMBER%"
+        IMAGE_TAG = "akhilkk03/node-app:${BUILD_NUMBER}"
     }
     stages {
         stage('Clone repo') {
