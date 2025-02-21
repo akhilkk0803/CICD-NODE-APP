@@ -11,25 +11,25 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $IMAGE_TAG .'
+                bat 'docker build -t $IMAGE_TAG .'
             }
         }
         stage('Push Docker Image') {
             steps {
                 withDockerRegistry([credentialsId: 'docker-hub-credentials', url: 'https://index.docker.io/v1/']) {
-                    sh 'docker push $IMAGE_TAG'
+                    bat 'docker push $IMAGE_TAG'
                 }
             }
         }
         stage('Update K8s Deployment in GitHub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
-                    sh "sed -i 's|image: .*|image: $IMAGE_TAG|' k8s/deployment.yaml"
-                    sh 'git config --global user.email "jenkins@ci.com"'
-                    sh 'git config --global user.name "Jenkins CI"'
-                    sh "git add k8s/deployment.yaml"
-                    sh "git commit -m 'Update deployment image to $IMAGE_TAG'"
-                    sh "git push https://$GIT_USER:$GIT_PASS@github.com/akhilkk0803/node-app.git main"
+                    bat "sed -i 's|image: .*|image: $IMAGE_TAG|' k8s/deployment.yaml"
+                    bat 'git config --global user.email "jenkins@ci.com"'
+                    bat 'git config --global user.name "Jenkins CI"'
+                    bat "git add k8s/deployment.yaml"
+                    bat "git commit -m 'Update deployment image to $IMAGE_TAG'"
+                    bat "git push https://$GIT_USER:$GIT_PASS@github.com/akhilkk0803/node-app.git main"
                 }
             }
         }
