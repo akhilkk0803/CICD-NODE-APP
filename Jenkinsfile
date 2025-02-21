@@ -24,12 +24,12 @@ pipeline {
         stage('Update K8s Deployment in GitHub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
-                    bat "sed -i 's|image: .*|image: %IMAGE_TAG%|' k8s/deployment.yaml"
+                    bat 'powershell -Command "(Get-Content k8s/deployment.yaml) -replace ''image: .*'', ''image: %IMAGE_TAG%'' | Set-Content k8s/deployment.yaml"'
                     bat 'git config --global user.email "jenkins@ci.com"'
                     bat 'git config --global user.name "Jenkins CI"'
                     bat "git add k8s/deployment.yaml"
                     bat "git commit -m 'Update deployment image to %IMAGE_TAG%'"
-    bat "git push https://%GIT_USER%:%GIT_PASS%@github.com/akhilkk0803/node-app.git main"
+                    bat "git push https://%GIT_USER%:%GIT_PASS%@github.com/akhilkk0803/node-app.git main"
                 }
             }
         }
